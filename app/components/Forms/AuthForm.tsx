@@ -1,6 +1,7 @@
 'use client';
 import { login } from "@/app/login/actions";
 import GoogleSignInButton from "../Buttons/googleSignInButton";
+import { signInWithGoogle } from "@/app/utils/actions";
 
 export default function AuthForm() {
     return (
@@ -16,40 +17,19 @@ export default function AuthForm() {
                         </p>
                     </div>
 
-                    <div className="mt-7 flex flex-col gap-2">
+                    <form className="mt-7 flex flex-col gap-2">
                         <button
-                            className="cursor-pointer inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none disabled:cursor-not-allowed disabled:opacity-100"
-                        >
-                            <img
-                                src="https://www.svgrepo.com/show/512317/github-142.svg"
-                                alt="GitHub"
-                                className="h-[18px] w-[18px]"
-                            />
-                            Continue with GitHub
-                        </button>
-
-                        <button
+                            formAction={signInWithGoogle}
                             className="cursor-pointer inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none disabled:cursor-not-allowed disabled:opacity-100"
                         >
                             <img
                                 src="https://www.svgrepo.com/show/475656/google-color.svg" 
                                 alt="Google"
                                 className="h-[18px] w-[18px] "
-                            />
-                            Continue withGoogle
+                            />  
+                            Continuar con Google
                         </button>
-
-                        <button
-                            className="cursor-pointer inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                            <img
-                                src="https://www.svgrepo.com/show/448234/linkedin.svg"
-                                alt="LinkedIn"
-                                className="h-[18px] w-[18px]"
-                            />
-                            Continue with LinkedIn
-                        </button>
-                    </div>
+                    </form>
 
                     <div className="flex w-full items-center gap-2 py-6 text-sm text-slate-600">
                         <div className="h-px w-full bg-slate-200"></div>
