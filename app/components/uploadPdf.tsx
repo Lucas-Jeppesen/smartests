@@ -4,13 +4,14 @@ import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 import cleanFileName from "../utils/cleanFileName";
-
+import { useRouter } from "next/navigation";
 
 
 export default function UploadPdf() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -27,9 +28,7 @@ export default function UploadPdf() {
     setLoading(true);
     setMessage(null);
 
-    //Quiz id generation
-    const quizId = uuidv4();
-    console.log(quizId);
+
 
     const rawFileName = file.name.replace(/\.[^/.]+$/, "");
     const cleanName = cleanFileName(rawFileName);
@@ -39,7 +38,7 @@ export default function UploadPdf() {
 
     const filePath = `user_uploads/${Date.now()}-${cleanName}.pdf`;
 
-    const { data, error } = await supabase.storage
+    const { data , error } = await supabase.storage
       .from("pdf-uploads")
       .upload(filePath, file, {
         contentType: "application/pdf",
@@ -74,19 +73,30 @@ export default function UploadPdf() {
         "Authorization": `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`
       },
       body: JSON.stringify({
-          quiz_id: quizId,
           pdf_url: publicUrl,
           quiz_name: rawFileName,
       }),
-  });
+    });
+
+    const quizData = await response.json();
+    console.log(quizData);
+
+    router.push(`/test/${quizData.quizId}`);
+
+    if (!response.ok) {
+      throw new Error(quizData.error || "Failed to generate quiz");
+    }
+
 
     setLoading(false);
 
+    /*
     if (dbError) {
       setMessage("⚠️ File uploaded but database entry failed.");
     } else {
       setMessage(`✅ File uploaded successfully! View: ${publicUrl}`);
     }
+    */
   }
 
   return (
