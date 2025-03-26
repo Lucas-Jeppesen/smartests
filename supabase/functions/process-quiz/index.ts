@@ -100,7 +100,7 @@ Deno.serve(async (req) => {
           .from("quiz")
           .update({
             raw_quiz_text: quizText,
-            status: "completed",
+            status: "complete",
           })
           .eq("id", quizId);
 
