@@ -23,8 +23,15 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
+     * - login (login page)
+     * - signup (signup page) - add if you have one
+     * - about (about page) - or any other public pages
+     * - / (root path)
+     * - auth/callback (Supabase auth callback) <--- ADD THIS
+     * - auth/auth-code-error (Your error page) <--- ADD THIS TOO
+     * - Any other public paths or API routes that shouldn't require auth
+     * Also exclude specific file extensions.
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|login|signup|about|$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|login|signup|about|auth/callback|auth/auth-code-error|^/$|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
