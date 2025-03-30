@@ -2,15 +2,11 @@
 interface SubmitButtonProps {
     onSubmit: () => void;
     disabled?: boolean;
-    totalQuestions: number;
-    answeredQuestions: number;
   }
   
   export default function SubmitButton({
     onSubmit,
     disabled = false,
-    totalQuestions,
-    answeredQuestions,
   }: SubmitButtonProps) {
     return (
       <div className="mt-8 flex flex-col items-center gap-2">
@@ -21,9 +17,6 @@ interface SubmitButtonProps {
         >
           Submit Quiz
         </button>
-        <p className="text-sm text-gray-600">
-          {answeredQuestions} of {totalQuestions} questions answered
-        </p>
       </div>
     );
   }
