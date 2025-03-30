@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/app/lib/supabase";
 import { useParams } from "next/navigation";
 import QuizRenderer from "@/app/components/Quiz/quizRenderer";
+import { createClient } from "@/app/utils/supabase/client";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 interface QuizData {
   id: string;
@@ -17,10 +18,53 @@ export default function QuizPage() {
   const quizId = params.quiz_id;
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [channel, setChannel] = useState<RealtimeChannel | null>(null);
+  
 
   useEffect(() => {
-    // Initial fetch of quiz data
+
+    let subscription: RealtimeChannel | null = null;
+    const setupRealtimeSubscription = async (supabase: any) => {
+      try {
+        // Clean up any existing subscription
+        if (channel) {
+          await channel.unsubscribe();
+        }
+
+        // Create new subscription
+        const newChannel = supabase
+          .channel(`quiz_status_${quizId}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "UPDATE",
+              schema: "public",
+              table: "quiz",
+              filter: `id=eq.${quizId}`,
+            },
+            (payload: { new: QuizData }) => {
+              setQuizData(payload.new);
+              if (payload.new.status === "complete") {
+                setLoading(false);
+              }
+            }
+          );
+
+        // Subscribe to the channel
+        await newChannel.subscribe();
+        setChannel(newChannel);
+        return newChannel;
+      } catch (err) {
+        console.error("Error setting up realtime subscription:", err);
+        return null;
+      }
+    };
+
     const fetchQuizData = async () => {
+
+      const supabase = createClient();
+
       const { data, error } = await supabase
         .from("quiz")
         .select("*")
@@ -35,34 +79,18 @@ export default function QuizPage() {
       } else {
         console.error("Error:", error);
       }
+
+      subscription = await setupRealtimeSubscription(supabase);
     };
 
     fetchQuizData();
 
-    // Set up real-time subscription
-    const subscription = supabase
-      .channel(`quiz_status_${quizId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "quiz",
-          filter: `id=eq.${quizId}`,
-        },
-        (payload) => {
-          setQuizData(payload.new as QuizData);
-          if (payload.new.status === "complete") {
-            setLoading(false);
-          }
-        }
-      )
-      .subscribe();
-
     return () => {
-      subscription.unsubscribe();
+      if (channel) {
+        channel.unsubscribe();
+      }
     };
-  }, [quizId]);
+  }, [quizId, channel]);
 
   if (loading) {
     return (

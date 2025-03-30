@@ -22,10 +22,9 @@ Deno.serve(async (req) => {
 
     const apiKey = Deno.env.get("GEMINI_API_KEY");
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
     const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (!apiKey || !supabaseUrl || !(supabaseAnonKey || supabaseServiceRoleKey)) {
+    if (!apiKey || !supabaseUrl || !(supabaseServiceRoleKey)) {
       return new Response(
         JSON.stringify({ error: "Missing required environment variables" }),
         {
@@ -38,7 +37,7 @@ Deno.serve(async (req) => {
     // Initialize Supabase client
     const supabase = createClient(
       supabaseUrl,
-      supabaseServiceRoleKey ?? supabaseAnonKey ?? ""
+      supabaseServiceRoleKey
     );
 
     // Create initial quiz row with pending status

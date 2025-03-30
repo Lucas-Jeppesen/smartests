@@ -8,5 +8,5 @@ export default function CrearTest() {
             <div>Página para realizar pruebas</div>
             <UploadPdf />
         </>
-    );
+    ); 
 }
