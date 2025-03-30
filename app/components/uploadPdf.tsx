@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { v4 as uuidv4 } from "uuid";
+import { createClient } from "../utils/supabase/client";
 import cleanFileName from "../utils/cleanFileName";
 import { useRouter } from "next/navigation";
 
@@ -11,8 +11,25 @@ export default function UploadPdf() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
+  useEffect(() => {
+    const getUser = async () => {
+      const clientSupa = await createClient();
+      const { data: { user }, error } = await clientSupa.auth.getUser();
+      if (error) {
+        console.error("Error fetching user:", error);
+        return;
+      }
+      setUser(user);
+    };
+
+    getUser();
+  }, []);
+ 
+  console.log("This is the user id:", user.id);
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
       setFile(e.target.files[0]);
@@ -75,6 +92,7 @@ export default function UploadPdf() {
       body: JSON.stringify({
           pdf_url: publicUrl,
           quiz_name: rawFileName,
+          user_id: user.id,
       }),
     });
 

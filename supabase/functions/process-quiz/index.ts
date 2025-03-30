@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { pdf_url } = await req.json();
+    const { pdf_url, quiz_name, user_id } = await req.json();
 
     if (!pdf_url) {
       return new Response(JSON.stringify({ error: "Missing PDF URL" }), {
@@ -49,6 +49,8 @@ Deno.serve(async (req) => {
           raw_quiz_text: "",
           source_url: pdf_url,
           status: "processing",
+          user_id: user_id,
+          name: quiz_name,
         },
       ])
       .select("id");
