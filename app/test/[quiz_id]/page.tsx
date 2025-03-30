@@ -1,4 +1,3 @@
-// app/test/[quizId]/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -15,6 +14,7 @@ interface QuizData {
 
 export default function QuizPage() {
   const params = useParams();
+  const quizId = params.quiz_id;
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,17 +24,16 @@ export default function QuizPage() {
       const { data, error } = await supabase
         .from("quiz")
         .select("*")
-        .eq("id", params.quiz_id)
+        .eq("id", quizId)
         .single();
-
-        console.log(data);
-        console.log(params);
 
       if (data) {
         setQuizData(data);
         if (data.status === "complete") {
           setLoading(false);
         }
+      } else {
+        console.error("Error:", error);
       }
     };
 
@@ -42,14 +41,14 @@ export default function QuizPage() {
 
     // Set up real-time subscription
     const subscription = supabase
-      .channel(`quiz_status_${params.quizId}`)
+      .channel(`quiz_status_${quizId}`)
       .on(
         "postgres_changes",
         {
           event: "UPDATE",
           schema: "public",
           table: "quiz",
-          filter: `id=eq.${params.quizId}`,
+          filter: `id=eq.${quizId}`,
         },
         (payload) => {
           setQuizData(payload.new as QuizData);
@@ -63,7 +62,7 @@ export default function QuizPage() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [params.quizId]);
+  }, [quizId]);
 
   if (loading) {
     return (

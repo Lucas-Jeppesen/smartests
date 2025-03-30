@@ -1,4 +1,3 @@
-import AnswerOption from "./answerOptions";
 import { Question, SelectedAnswers } from "./types";
 
 interface QuestionCardProps {

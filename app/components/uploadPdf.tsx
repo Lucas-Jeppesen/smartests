@@ -11,7 +11,7 @@ export default function UploadPdf() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<{id: string} | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,7 +28,6 @@ export default function UploadPdf() {
     getUser();
   }, []);
  
-  console.log("This is the user id:", user.id);
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -39,6 +38,11 @@ export default function UploadPdf() {
   const handleUpload = async () => {
     if (!file) {
       setMessage("❌ Please select a file.");
+      return;
+    }
+
+    if (!user) {
+      setMessage("❌ User not authenticated.");
       return;
     }
 
@@ -55,7 +59,7 @@ export default function UploadPdf() {
 
     const filePath = `user_uploads/${Date.now()}-${cleanName}.pdf`;
 
-    const { data , error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("pdf-uploads")
       .upload(filePath, file, {
         contentType: "application/pdf",
@@ -82,7 +86,12 @@ export default function UploadPdf() {
       }
     );
 
+    if (dbError) {
+      setLoading(false);
+      setMessage("Error al registrar el pdf en la base da datos");
+    }
 
+    
     const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_EDGE_FUNCTION_URL}process-quiz`, {
       method: "POST",
       headers: { 
