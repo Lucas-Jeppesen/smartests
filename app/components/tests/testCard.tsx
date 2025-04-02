@@ -19,7 +19,8 @@ export default function TestCard({name, created_at} : TestCardProps) {
             <h3>{name}</h3>
             <a>Asignatura...</a>
             <p>{formattedDate}</p>
-            <button></button>
+            <button>Iniciar</button>
+            <button>Eliminar</button>
         </div>
     );
 }
