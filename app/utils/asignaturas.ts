@@ -20,7 +20,7 @@ export async function crearAsignatura({ name, color }: { name: string; color: st
   return { data };
 } 
 
-export async function editAsignatura({ id, name, color } : { id: string; name: string; color: string; }) {
+export async function editAsignatura({ id, name, color } : { id: string | undefined; name: string; color: string; }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

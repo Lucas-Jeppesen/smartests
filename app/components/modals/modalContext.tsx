@@ -4,15 +4,22 @@ import { createContext, useState, useContext, ReactNode } from 'react';
 
 type ModalType = 'create' | 'edit' | 'delete' | null;
 
+interface dataObject {
+  id?: string;
+  name?: string;
+  color?: string;
+}
+
 interface ModalState {
   isOpen: boolean;
   type: ModalType;
-  data?: any;
+  data?: dataObject | null;
 }
+
 
 interface ModalContextType {
   modalState: ModalState;
-  openModal: (type: ModalType, data?: any) => void;
+  openModal: (type: ModalType, data?: dataObject | null) => void;
   closeModal: () => void;
 }
 
@@ -25,7 +32,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     data: null,
   });
   
-  const openModal = (type: ModalType, data?: any) => {
+  const openModal = (type: ModalType, data?: dataObject | null) => {
     setModalState({ isOpen: true, type, data });
   };
   

@@ -1,5 +1,5 @@
 import { useModal } from "./modalContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BaseModal from "./baseModal";
 import { editAsignatura } from "@/app/utils/asignaturas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,7 +12,17 @@ export default function EditModal() {
   const { modalState, closeModal } = useModal();
   const [name, setName] = useState(modalState.data?.name || '');
   const [color, setColor] = useState(modalState.data?.color || '');
+
+
+  useEffect(() => {
+    if (modalState.data) {
+      setName(modalState.data.name || '');
+      setColor(modalState.data.color || '');
+    }
+  }, [modalState.data]);
+
   const id = modalState.data?.id;
+  console.log("Name:", name);
 
 
   const createMutation = useMutation({

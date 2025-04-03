@@ -5,7 +5,7 @@ import { useModal } from "./modalContext";
 
 interface ModalTriggerButtonProps {
   type: 'create' | 'edit' | 'delete';
-  data?: any;
+  data?: object | null
   children: React.ReactNode;
   className?: string;
 }

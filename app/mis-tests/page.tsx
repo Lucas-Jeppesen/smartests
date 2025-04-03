@@ -1,7 +1,5 @@
-import { createClient } from "../utils/supabase/server";
+
 import TestCard from "../components/tests/testCard";
-import { Tables } from "@/database.types";
-import AsignaturaCard from "../components/Asignaturas/asignaturaCard";
 import Asignaturas from "../components/Asignaturas/asignaturas";
 
 export default async function MisTests() {

@@ -28,7 +28,7 @@ export default function Header() {
         <Link href="/" passHref className="w-32 md:w-48 pt-[6px] md:pt-[2px]">
           <img
             src="/branding/Logo_Roadsense.svg"
-            alt="Roadsenses Logotype"
+            alt="Logo"
           ></img>
         </Link>
         <nav className="font-semibold">

@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+
 import { ModalProvider } from '../modals/modalContext';
 import ModalTriggerButton from '../modals/modalTriggerButton';
 import CreateModal from '../modals/createModal';
 import EditModal from '../modals/editModal';
 import DeleteModal from '../modals/deleteModal';
 import { fetchWholeTable } from '@/app/utils/fetches/fetchWholeTable';
-import { Tables } from '@/database.types';
 import { useQuery } from '@tanstack/react-query';
 import AsignaturaCard from './asignaturaCard';
 
