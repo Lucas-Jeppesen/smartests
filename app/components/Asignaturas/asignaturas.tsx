@@ -8,68 +8,44 @@ import EditModal from '../modals/editModal';
 import DeleteModal from '../modals/deleteModal';
 import { fetchWholeTable } from '@/app/utils/fetches/fetchWholeTable';
 import { Tables } from '@/database.types';
+import { useQuery } from '@tanstack/react-query';
+import AsignaturaCard from './asignaturaCard';
 
 
 export default function Asignaturas() {
-  // const [items, setItems] = useState([
-  //   { id: '1', name: 'Item 1' },
-  //   { id: '2', name: 'Item 2' }
-  // ]);
-  const [asignaturas, setAsignaturas] = useState<Tables<'asignatura'>[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const data = await fetchWholeTable('asignatura');
-        console.log("asignaturas fetched data", data);
-        setAsignaturas(data);
-      } catch (error) {
-        console.error("Failed to load asignaturas:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ['obtener-tabla', 'asignatura'],
+    queryFn: () => fetchWholeTable('asignatura'),
+  })
 
-    loadData();
-  }, []);
+  if (isPending) {
+    return <span>Loading...</span>
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>
+  }
+
   
   return (
     <ModalProvider>
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Asignaturas</h1>
-        
-        <ModalTriggerButton
-          type="create"
-          className='bg-blue-500 text-white px-4 py-2 rounded mb-4'
-        >
-          Crear nueva
-        </ModalTriggerButton>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {asignaturas.map(item => (
-            <div key={item.id} className="border p-4 rounded">
-              <h2>{item.name}</h2>
-              <div className="mt-2 flex gap-4">
-                <ModalTriggerButton
-                  type="edit"
-                  className='bg-blue-300 text-white px-4 py-2 rounded mb-4'
-                >
-                  Editar
-                </ModalTriggerButton>
-                <ModalTriggerButton
-                  type="delete"
-                  className='bg-red-500 text-white px-4 py-2 rounded mb-4'
-                >
-                  Borrar
-                </ModalTriggerButton>
-              </div>
-            </div>
+      <div className="p-4 w-full">
+        <div className='flex justify-between'>
+          <h1 className="text-2xl font-bold mb-4">Asignaturas</h1>
+          <ModalTriggerButton
+            type="create"
+            className='bg-gray-100 text-gray-950 px-4 py-2 rounded mb-4 cursor-pointer border-1 border-gray-400'
+          >
+            Crear nueva
+          </ModalTriggerButton>
+        </div>
+        <div className="flex flex-col gap-4">
+          {data.map(item => (
+            <AsignaturaCard key={item.id} item={item} />
           ))}
         </div>
-        
-        {/* Include all modal components */}
+        {/* Including all modal components */}
         <CreateModal />
         <EditModal />
         <DeleteModal />

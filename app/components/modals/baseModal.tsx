@@ -35,14 +35,14 @@ export default function BaseModal({ title, children, onConfirm }: BaseModalProps
             onClick={closeModal}
             className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
           >
-            Cancel
+            Cancelar
           </button>
           {onConfirm && (
             <button
               onClick={onConfirm}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
-              Confirm
+              Confirmar
             </button>
           )}
         </div>

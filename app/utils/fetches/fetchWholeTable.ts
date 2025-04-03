@@ -14,6 +14,7 @@ export async function fetchWholeTable(table: string) {
     .from(table)
     .select("*")
     .eq("user_id", userId)
+    .order('created_at', { ascending: true })
 
     if (data) {
     return data;

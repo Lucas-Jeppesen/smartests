@@ -1,34 +1,58 @@
 import { useModal } from "./modalContext";
 import { useState } from "react";
-import { useEffect } from "react";
 import BaseModal from "./baseModal";
+import { editAsignatura } from "@/app/utils/asignaturas";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import ColorPicker from "./colorPicker";
 
 
 
 export default function EditModal() {
-const { modalState, closeModal } = useModal();
-const [name, setName] = useState('');
+  const queryClient = useQueryClient()
+  const { modalState, closeModal } = useModal();
+  const [name, setName] = useState(modalState.data?.name || '');
+  const [color, setColor] = useState(modalState.data?.color || '');
+  const id = modalState.data?.id;
 
-// Initialize the form when the modal opens
-useEffect(() => {
-    if (modalState.data) {
-    setName(modalState.data.name);
+
+  const createMutation = useMutation({
+    mutationFn: () => editAsignatura({ id, name, color }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'asignatura'] });
+      closeModal();
+    },
+    onError: (error) => {
+      console.error('Error al editar la asignatura:', error);
     }
-}, [modalState.data]);
+  });
 
-if (modalState.type !== 'edit') return null;
+  if (modalState.type !== 'edit') return null;
 
-const handleSubmit = () => {
-    closeModal();
-};
+  const handleSubmit = () => {
+    if (!name.trim() || !color) {
+      return;
+    }
+    createMutation.mutate();
 
-return (
-    <BaseModal title="Edit Item" onConfirm={handleSubmit}>
-    <input 
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
-    />
+  };
+
+  return (
+    <BaseModal 
+      title="Editar asignatura" 
+      onConfirm={handleSubmit}
+    >
+      <div className="flex flex-col gap-4">
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Nombre"
+          className="border rounded px-2 py-1"
+        />
+        <ColorPicker selectedColor={color} onSelectColor={setColor} />
+        {createMutation.isError && (
+          <p className="text-red-500">Error creando la asignatura</p>
+        )}
+      </div>
     </BaseModal>
-);
+  );
 }
