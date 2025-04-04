@@ -1,10 +1,11 @@
 'use client';
 
 import { useModal } from "./modalContext";
+import { ModalType } from "./types";
 
 
 interface ModalTriggerButtonProps {
-  type: 'create' | 'edit' | 'delete';
+  type: ModalType;
   data?: object | null
   children: React.ReactNode;
   className?: string;

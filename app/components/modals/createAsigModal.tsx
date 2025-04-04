@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 
-export default function CreateModal() {
+export default function CreateAsigModal() {
   const queryClient = useQueryClient()
   const { modalState, closeModal } = useModal();
   const [name, setName] = useState('');
@@ -26,7 +26,7 @@ export default function CreateModal() {
     }
   });
 
-  if (modalState.type !== 'create') return null;
+  if (modalState.type !== 'create-asig') return null;
 
   const handleSubmit = () => {
     if (!name.trim() || !color) {

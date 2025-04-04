@@ -48,8 +48,8 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-3xl font-bold mb-8 text-center">{quizData.name}</h1>
-      <p>{`Asignatura: ${quizData.asignatura.name}`}</p>
+      <h1 className="text-3xl font-bold mb-4 text-center">{quizData.name}</h1>
+      <p className="text-center mb-8">{`Asignatura: ${quizData.asignatura.name}`}</p>
 
       {score !== null && (
         <div className="mb-8 text-center">

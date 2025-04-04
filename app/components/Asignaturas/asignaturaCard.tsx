@@ -27,13 +27,12 @@ const colorVariants = {
 export default function AsignaturaCard({ item }) {
   
   const color: string = item.color;
-  console.log(color);
   return (
     <div key={item.id} className={`flex justify-between items-center w-full border p-4 rounded ${colorVariants[color]} transition-all duration-300 ease-in-out`}>
       <h2 className='font-bold'>{item.name}</h2>
-      <div className="my-2 flex gap-4">
+      <div className="my-2 flex gap-2 text-sm">
         <ModalTriggerButton
-          type="edit"
+          type="edit-asig"
           className='bg-black text-white px-4 py-2 rounded cursor-pointer'
           data={{
             id: item.id,
@@ -44,7 +43,7 @@ export default function AsignaturaCard({ item }) {
           Editar
         </ModalTriggerButton>
         <ModalTriggerButton
-          type="delete"
+          type="delete-asig"
           className='bg-black text-white px-4 py-2 rounded cursor-pointer' 
           data={{ id: item.id }}
         >

@@ -7,7 +7,7 @@ import ColorPicker from "./colorPicker";
 
 
 
-export default function EditModal() {
+export default function EditAsigModal() {
   const queryClient = useQueryClient()
   const { modalState, closeModal } = useModal();
   const [name, setName] = useState(modalState.data?.name || '');
@@ -36,7 +36,7 @@ export default function EditModal() {
     }
   });
 
-  if (modalState.type !== 'edit') return null;
+  if (modalState.type !== 'edit-asig') return null;
 
   const handleSubmit = () => {
     if (!name.trim() || !color) {

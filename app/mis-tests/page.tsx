@@ -1,6 +1,7 @@
 
 import TestCard from "../components/tests/testCard";
 import Asignaturas from "../components/Asignaturas/asignaturas";
+import Tests from "../components/tests/tests";
 
 export default async function MisTests() {
 
@@ -12,7 +13,12 @@ export default async function MisTests() {
           <TestCard key={test.id} name={test.name} created_at={test.created_at} />
         ))}
       </section> */}
-      <Asignaturas />
+      <div className="w-2/3">
+        <Tests />
+      </div>
+      <div className="w-1/3">
+        <Asignaturas />
+      </div>
     </div>
   );
 }

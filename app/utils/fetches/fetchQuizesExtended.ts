@@ -3,7 +3,7 @@
 import { createClient } from "@/app/utils/supabase/server";
 
 
-export async function fetchWholeTable(table: string) {
+export async function fetchQuizesExtended(table: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -12,16 +12,23 @@ export async function fetchWholeTable(table: string) {
     const userId = user.id;
     const { data,  error } = await supabase
     .from(table)
-    .select("*")
+    .select(`
+        *,
+        asignatura:asignatura_id (
+          id,
+          name,
+          color
+        )
+      `)
     .eq("user_id", userId)
     .order('created_at', { ascending: false })
 
     if (data) {
-    return data;
+        return data;
     }
 
     if (error) {
-    return error;
+        return error;
     }
   }
 }

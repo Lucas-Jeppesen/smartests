@@ -6,6 +6,7 @@ import QuizRenderer from "@/app/components/Quiz/quizRenderer";
 import { createClient } from "@/app/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { QuizWithAsignatura } from "@/app/components/Quiz/types";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 
@@ -15,6 +16,7 @@ export default function QuizPage() {
   const quizId = params.quiz_id;
   const [quizData, setQuizData] = useState<QuizWithAsignatura | null>(null);
   const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   
 
   useEffect(() => {
@@ -45,6 +47,8 @@ export default function QuizPage() {
               ...updatedQuiz,
               asignatura: asignaturaData
             });
+
+            queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'quiz'] });
             if (payload.new.status === "complete") {
               setLoading(false);
             }

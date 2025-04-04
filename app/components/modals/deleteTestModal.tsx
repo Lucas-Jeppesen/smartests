@@ -2,17 +2,18 @@ import { useModal } from "./modalContext";
 import BaseModal from "./baseModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { borrarAsignatura } from "@/app/utils/asignaturas";
+import { borrarTest } from "@/app/utils/tests";
 
-export default function DeleteModal() {
+export default function DeleteTestModal() {
   const queryClient = useQueryClient()
   const { modalState, closeModal } = useModal();
   const id = modalState.data?.id;
 
 
   const createMutation = useMutation({
-    mutationFn: () => borrarAsignatura({ id }),
+    mutationFn: () => borrarTest({ id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'asignatura'] });
+      queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'quiz'] });
       closeModal();
     },
     onError: (error) => {
@@ -20,7 +21,7 @@ export default function DeleteModal() {
     }
   });
 
-  if (modalState.type !== 'delete') return null;
+  if (modalState.type !== 'delete-test') return null;
 
   const handleDelete = () => {
     createMutation.mutate();
@@ -28,7 +29,7 @@ export default function DeleteModal() {
   };
 
 return (
-    <BaseModal title="Borrar Asignatura" onConfirm={handleDelete}>
+    <BaseModal title="Borrar Test" onConfirm={handleDelete}>
     <p>Seguro que quieres eliminar {modalState.data?.name}?</p>
     </BaseModal>
 );

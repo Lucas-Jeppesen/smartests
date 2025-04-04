@@ -3,9 +3,9 @@
 
 import { ModalProvider } from '../modals/modalContext';
 import ModalTriggerButton from '../modals/modalTriggerButton';
-import CreateModal from '../modals/createModal';
-import EditModal from '../modals/editModal';
-import DeleteModal from '../modals/deleteModal';
+import CreateAsigModal from '../modals/createAsigModal';
+import EditAsigModal from '../modals/editAsigModal';
+import DeleteAsigModal from '../modals/deleteAsigModal';
 import { fetchWholeTable } from '@/app/utils/fetches/fetchWholeTable';
 import { useQuery } from '@tanstack/react-query';
 import AsignaturaCard from './asignaturaCard';
@@ -33,7 +33,7 @@ export default function Asignaturas() {
         <div className='flex justify-between'>
           <h1 className="text-2xl font-bold mb-4">Asignaturas</h1>
           <ModalTriggerButton
-            type="create"
+            type="create-asig"
             className='bg-gray-50 text-gray-950 px-4 py-2 rounded mb-4 cursor-pointer border-1 border-gray-400'
           >
             Crear nueva
@@ -45,9 +45,9 @@ export default function Asignaturas() {
           ))}
         </div>
         {/* Including all modal components */}
-        <CreateModal />
-        <EditModal />
-        <DeleteModal />
+        <CreateAsigModal />
+        <EditAsigModal />
+        <DeleteAsigModal />
       </div>
     </ModalProvider>
   );

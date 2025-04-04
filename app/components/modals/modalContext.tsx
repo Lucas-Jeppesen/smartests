@@ -1,8 +1,7 @@
 'use client'; 
 
 import { createContext, useState, useContext, ReactNode } from 'react';
-
-type ModalType = 'create' | 'edit' | 'delete' | null;
+import { ModalType } from './types';
 
 interface dataObject {
   id?: string;
