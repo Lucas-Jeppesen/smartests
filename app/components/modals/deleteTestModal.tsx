@@ -1,7 +1,6 @@
 import { useModal } from "./modalContext";
 import BaseModal from "./baseModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { borrarAsignatura } from "@/app/utils/asignaturas";
 import { borrarTest } from "@/app/utils/tests";
 
 export default function DeleteTestModal() {

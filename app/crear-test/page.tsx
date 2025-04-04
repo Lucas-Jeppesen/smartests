@@ -328,7 +328,8 @@ export default function QuizUploadForm() {
       {/* Reactive submit button */}
       <form.Subscribe
         selector={(state) => [state.canSubmit, state.isSubmitting]}
-        children={([canSubmit, isSubmitting]) => (
+      >
+        {([canSubmit, isSubmitting]) => (
           <button
             type="submit"
             disabled={!canSubmit}
@@ -337,7 +338,7 @@ export default function QuizUploadForm() {
             {isSubmitting ? "Submitting..." : "Submit"}
           </button>
         )}
-      />
+      </form.Subscribe>
     </form>
   );
 }

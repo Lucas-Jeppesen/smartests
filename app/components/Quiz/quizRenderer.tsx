@@ -1,6 +1,6 @@
 // components/quiz/QuizRenderer.tsx
 import { useState } from "react";
-import { QuizData, Question, SelectedAnswers } from "./types";
+import { Question, SelectedAnswers } from "./types";
 import QuestionCard from "./questionCard";
 import SubmitButton from "./submitButton";
 import { QuizWithAsignatura } from "./types";

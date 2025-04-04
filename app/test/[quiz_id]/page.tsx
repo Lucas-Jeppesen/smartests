@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import QuizRenderer from "@/app/components/Quiz/quizRenderer";
 import { createClient } from "@/app/utils/supabase/client";
-import { RealtimeChannel } from "@supabase/supabase-js";
+import { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { QuizWithAsignatura } from "@/app/components/Quiz/types";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -21,7 +21,7 @@ export default function QuizPage() {
 
   useEffect(() => {
     let subscription: RealtimeChannel | null = null;
-    const setupRealtimeSubscription = async (supabase: any) => {
+    const setupRealtimeSubscription = async (supabase: SupabaseClient ) => {
       // Create new subscription, no need to check for "channel" state here
       const newChannel = supabase
         .channel(`quiz_status_${quizId}`)
