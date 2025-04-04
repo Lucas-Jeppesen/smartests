@@ -34,7 +34,7 @@ export default function Asignaturas() {
           <h1 className="text-2xl font-bold mb-4">Asignaturas</h1>
           <ModalTriggerButton
             type="create"
-            className='bg-gray-100 text-gray-950 px-4 py-2 rounded mb-4 cursor-pointer border-1 border-gray-400'
+            className='bg-gray-50 text-gray-950 px-4 py-2 rounded mb-4 cursor-pointer border-1 border-gray-400'
           >
             Crear nueva
           </ModalTriggerButton>

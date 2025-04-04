@@ -5,20 +5,16 @@ import { useParams } from "next/navigation";
 import QuizRenderer from "@/app/components/Quiz/quizRenderer";
 import { createClient } from "@/app/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
+import { QuizWithAsignatura } from "@/app/components/Quiz/types";
 
 
-interface QuizData {
-  id: string;
-  status: "processing" | "complete";
-  raw_quiz_text: string;
-}
+
 
 export default function QuizPage() {
   const params = useParams();
   const quizId = params.quiz_id;
-  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const [quizData, setQuizData] = useState<QuizWithAsignatura | null>(null);
   const [loading, setLoading] = useState(true);
-  const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   
 
   useEffect(() => {
@@ -35,8 +31,20 @@ export default function QuizPage() {
             table: "quiz",
             filter: `id=eq.${quizId}`,
           },
-          (payload: { new: QuizData }) => {
-            setQuizData(payload.new);
+          async (payload: { new: QuizWithAsignatura }) => {
+
+            const updatedQuiz = payload.new;
+
+            const { data: asignaturaData } = await supabase
+              .from("asignatura")
+              .select("id, name")
+              .eq("id", updatedQuiz.asignatura_id)
+              .single();
+
+            setQuizData({
+              ...updatedQuiz,
+              asignatura: asignaturaData
+            });
             if (payload.new.status === "complete") {
               setLoading(false);
             }
@@ -52,12 +60,19 @@ export default function QuizPage() {
   
       const { data, error } = await supabase
         .from("quiz")
-        .select("*")
+        .select(`
+          *,
+          asignatura:asignatura_id (
+            id,
+            name
+          )
+        `)
         .eq("id", quizId)
         .single();
   
       if (data) {
         setQuizData(data);
+        console.log(data);
         if (data.status === "complete") {
           setLoading(false);
         }

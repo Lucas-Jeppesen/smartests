@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
 import cleanFileName from "../utils/cleanFileName";
 import { supabase } from "../lib/supabase";
 import { createClient } from "../utils/supabase/client";
+import { fetchWholeTable } from "../utils/fetches/fetchWholeTable";
+import { useQuery } from "@tanstack/react-query";
 
 
 export default function QuizUploadForm() {
@@ -27,11 +28,21 @@ export default function QuizUploadForm() {
     getUser();
   }, []);
 
+
+  const { data: subjects = [], isLoading: isLoadingSubjects } = useQuery({
+    queryKey: ['asignaturas', user?.id],
+    queryFn: () => fetchWholeTable('asignatura'),
+    enabled: !!user,
+  });
+  console.log("Asignaturas:", subjects);
+
   // Initialize the form with default values, submission logic, and Zod-based validation.
   const form = useForm({
     defaultValues: {
       quizName: "",
       file: null,
+      numQuestions: 12,
+      subjectId: "",
     },
     onSubmit: async ({ value }) => {
       if (!user) {
@@ -83,6 +94,8 @@ export default function QuizUploadForm() {
             pdf_url: publicUrl,
             quiz_name: value.quizName || rawFileName,
             user_id: user.id,
+            num_questions: value.numQuestions,
+            asignatura_id: value.subjectId,
           }),
         }
       );
@@ -99,10 +112,10 @@ export default function QuizUploadForm() {
         return {
           fields: {
             quizName: !value.quizName || value.quizName.trim() === "" 
-              ? "Quiz name is required" 
+              ? "Dale un nombre a tu test" 
               : undefined,
             file: !value.file 
-              ? "A file is required" 
+              ? "Añade un pdf" 
               : undefined,
           },
         };
@@ -117,8 +130,38 @@ export default function QuizUploadForm() {
         e.stopPropagation();
         form.handleSubmit();
       }}
-      className="flex flex-col items-center space-y-4"
+      className="flex flex-col items-center space-y-4 px-12 pt-12"
     >
+
+      {/* Quiz Name Field */}
+      <div className="w-full">
+        <form.Field name="quizName">
+          {(field) => (
+            <>
+              <label htmlFor={field.name} className="block text-sm font-medium">
+                Nombre del Test
+              </label>
+              <input
+                id={field.name}
+                type="text"
+                value={field.state.value || ""}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className="border px-4 py-2 rounded w-full"
+                placeholder="Dejar vacío para coger nombre del pdf"
+              />
+              {
+                field.state.meta.errors.map((error, i) => (
+                  <div key={i} className="error text-red-700 text-sm">
+                    {error}
+                  </div>
+                ))
+              }
+            </>
+          )}
+        </form.Field>
+      </div>
+
       {/* File Input Field */}
       <div className="w-full">
         <form.Field name="file">
@@ -188,35 +231,99 @@ export default function QuizUploadForm() {
           }}
         </form.Field>
       </div>
+      
+      <div className="flex justify-between w-full">
+        {/* Number of Questions Range Selector */}
+        <div className="w-2/5">
+          <form.Field name="numQuestions">
+            {(field) => {
+              // Handle range input and display the current value
+              return (
+                <>
+                  <div className="flex justify-between items-center">
+                    <label htmlFor={field.name} className="block text-sm font-medium">
+                      Número de Preguntas
+                    </label>
+                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                      {field.state.value}
+                    </span>
+                  </div>
+                  
+                  <div className="mt-2">
+                    <input
+                      id={field.name}
+                      type="range"
+                      min="10"
+                      max="30"
+                      step="1"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(parseInt(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>10</span>
+                      <span>20</span>
+                      <span>30</span>
+                    </div>
+                  </div>
+                  
+                  {field.state.meta.errors && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {field.state.meta.errors}
+                    </p>
+                  )}
+                </>
+              );
+            }}
+          </form.Field>
+        </div>
 
-      {/* Quiz Name Field */}
-      <div className="w-full">
-        <form.Field name="quizName">
-          {(field) => (
-            <>
-              <label htmlFor={field.name} className="block text-sm font-medium">
-                Nombre del Test
-              </label>
-              <input
-                id={field.name}
-                type="text"
-                value={field.state.value || ""}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                className="border px-4 py-2 rounded w-full"
-                placeholder="Dejar vacío para coger nombre del pdf"
-              />
-              {
-                field.state.meta.errors.map((error, i) => (
+        {/* Subject Dropdown */}
+        <div className="w-2/5">
+          <form.Field name="subjectId">
+            {(field) => (
+              <>
+                <label htmlFor={field.name} className="block text-sm font-medium">
+                  Asignatura
+                </label>
+                <div className="mt-1 relative">
+                  <select
+                    id={field.name}
+                    value={field.state.value || ""}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
+                    className="border px-4 py-2 rounded w-full bg-white"
+                    disabled={isLoadingSubjects}
+                  >
+                    <option value="">Selecciona una asignatura</option>
+                    {subjects.map((subject) => (
+                      <option key={subject.id} value={subject.id}>
+                        {subject.name}
+                      </option>
+                    ))}
+                  </select>
+                  {isLoadingSubjects && (
+                    <div className="absolute right-2 top-2">
+                      <div className="animate-spin h-5 w-5 border-2 border-blue-500 rounded-full border-t-transparent"></div>
+                    </div>
+                  )}
+                </div>
+                {subjects.length === 0 && !isLoadingSubjects && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    No tienes asignaturas creadas. Crea una primero en la sección de asignaturas.
+                  </p>
+                )}
+                {field.state.meta.errors.map((error, i) => (
                   <div key={i} className="error text-red-700 text-sm">
                     {error}
                   </div>
-                ))
-              }
-            </>
-          )}
-        </form.Field>
-      </div>
+                ))}
+              </>
+            )}
+          </form.Field>
+        </div>
+      </div>   
 
       {/* Reactive submit button */}
       <form.Subscribe
@@ -235,93 +342,3 @@ export default function QuizUploadForm() {
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "use client";
-
-// import UploadPdf from "../components/uploadPdf";
-// import { useRouter } from "next/navigation";
-// import { useForm } from '@tanstack/react-form';
-// import { z } from "zod";
-
-
-// const quizSchema = z.object({
-//   quizName: z.string().min(1, "Quiz name is required"),
-//   file: z.instanceof(File, "A file is required"),
-// });
-
-// export default function CrearTestForm() {
-
-//   const router = useRouter();
-
-//   const form = useForm({
-//     defaultValues: {
-//       quizName: '',
-//       file: null,
-//     },
-//     onSubmit: async ({ value }) => {
-//       // Do something with form data
-//       console.log(value)
-//     },
-//     validators: {
-//       onChange: quizSchema,
-//     }
-//   })
-
-//   return(
-//       <div>
-//         <form
-//           onSubmit={(e) => {
-//             e.preventDefault()
-//             e.stopPropagation()
-//             form.handleSubmit()
-//           }}
-//         >
-//           <div>
-//             <form.Field
-//               name="quizName"
-//               children={(field) => {
-//                 return (
-//                   <>
-//                     <label htmlFor={field.name}>Nombre del Test</label>
-//                     <input
-//                       id={field.name}
-//                       name={field.name}
-//                       value={field.state.value}
-//                       onBlur={field.handleBlur}
-//                       onChange={(e) => field.handleChange(e.target.value)}
-//                       placeholder="Dejar vacío para coger nombre del pdf"
-//                     />
-//                   </>
-//                 )
-//               }}
-//             />
-//           </div>
-//           <form.Subscribe
-//             selector={(state) => [state.canSubmit, state.isSubmitting]}
-//             children={([canSubmit, isSubmitting]) => (
-//               <button type="submit" disabled={!canSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">
-//                 {isSubmitting ? "Submitting..." : "Submit"}
-//               </button>
-//             )}
-//           />
-//         </form>
-//       </div>
-//   ); 
-// }

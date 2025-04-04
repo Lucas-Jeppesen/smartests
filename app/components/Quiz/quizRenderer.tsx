@@ -3,9 +3,11 @@ import { useState } from "react";
 import { QuizData, Question, SelectedAnswers } from "./types";
 import QuestionCard from "./questionCard";
 import SubmitButton from "./submitButton";
+import { QuizWithAsignatura } from "./types";
+
 
 interface QuizRendererProps {
-  quizData: QuizData | null;
+  quizData: QuizWithAsignatura;
 }
 
 export default function QuizRenderer({ quizData }: QuizRendererProps) {
@@ -46,7 +48,8 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-3xl font-bold mb-8 text-center">Quiz</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">{quizData.name}</h1>
+      <p>{`Asignatura: ${quizData.asignatura.name}`}</p>
 
       {score !== null && (
         <div className="mb-8 text-center">

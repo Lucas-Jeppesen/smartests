@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "npm:@google/generative-ai";
 import { corsHeaders } from "../_shared/cors.ts";
-import { schema } from "../_shared/schema.ts";
+import { schema as baseSchema } from "../_shared/schema.ts";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js";
 import { Buffer } from "node:buffer";
@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { pdf_url, quiz_name, user_id } = await req.json();
+    const { pdf_url, quiz_name, user_id, num_questions, asignatura_id } = await req.json();
 
     if (!pdf_url) {
       return new Response(JSON.stringify({ error: "Missing PDF URL" }), {
@@ -19,6 +19,7 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
 
     const apiKey = Deno.env.get("GEMINI_API_KEY");
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -50,6 +51,8 @@ Deno.serve(async (req) => {
           status: "processing",
           user_id: user_id,
           name: quiz_name,
+          num_questions: num_questions,
+          asignatura_id: asignatura_id,
         },
       ])
       .select("id");
@@ -68,11 +71,16 @@ Deno.serve(async (req) => {
     (async () => {
       try {
         const genAI = new GoogleGenerativeAI(apiKey);
+        const dynamicSchema = {
+          ...baseSchema,
+          minItems: num_questions,
+          maxItems: num_questions,
+        };
         const model = genAI.getGenerativeModel({
           model: "gemini-2.0-flash",
           generationConfig: {
             responseMimeType: "application/json",
-            responseSchema: schema,
+            responseSchema: dynamicSchema,
           },
         });
 
