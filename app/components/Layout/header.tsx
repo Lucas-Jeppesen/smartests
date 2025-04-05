@@ -7,7 +7,7 @@ export default function Header() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const navigationLinks = [
-    { href: "/", label: "Inicio" },
+    { href: "/inicio", label: "Inicio" },
     { href: "/crear-test", label: "Crear Test" },
     { href: "/mis-tests", label: "Mis Tests" },
     { href: "/creditos", label: "Créditos" },
@@ -25,7 +25,7 @@ export default function Header() {
   return (
     <header className="h-[74px] fixed top-0 left-0 w-full bg-background z-99">
       <div className="flex justify-between p-6 border-b-[1px] border-foreground h-full">
-        <Link href="/" passHref className="w-32 md:w-48 pt-[6px] md:pt-[2px]">
+        <Link href="/inicio" passHref className="w-32 md:w-48 pt-[6px] md:pt-[2px]">
           <img
             src="/branding/Logo_Roadsense.svg"
             alt="Logo"
