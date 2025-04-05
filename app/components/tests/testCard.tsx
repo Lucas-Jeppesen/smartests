@@ -29,6 +29,9 @@ const colorVariants = {
   slate: 'bg-slate-200 hover:bg-slate-100 text-slate-800',
 };
 
+type ColorVariant = keyof typeof colorVariants;
+
+
 export default function TestCard({ item } : TestCardProps) {
   
   const formatedDate = formatDate(item.created_at);
@@ -49,7 +52,7 @@ export default function TestCard({ item } : TestCardProps) {
         <h2 className='font-bold'>{item.name}</h2>
         <p>{`Creado el: ${formatedDate}`}</p>
         <p>{`${item.num_questions} preguntas`}</p>
-        <p className={`text-center border p-2 rounded ${colorVariants[asignatura_color]} transition-all duration-300 ease-in-out`}>{asignatura_name}</p>
+        <p className={`text-center border p-2 rounded ${colorVariants[asignatura_color as ColorVariant]}transition-all duration-300 ease-in-out`}>{asignatura_name}</p>
       </div>
       <div className="my-2 flex gap-4">
       <a href={`/test/${item.id}`} className='bg-black text-white px-4 py-2 rounded cursor-pointer text-sm'>Ir al test</a>

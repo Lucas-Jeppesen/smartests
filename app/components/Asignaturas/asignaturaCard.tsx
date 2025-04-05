@@ -1,6 +1,7 @@
 'use client';
 
 import ModalTriggerButton from '../modals/modalTriggerButton';
+import { Tables } from '@/database.types';
 
 const colorVariants = {
   red: 'bg-red-200 hover:bg-red-100 text-red-800',
@@ -22,13 +23,23 @@ const colorVariants = {
   rose: 'bg-rose-200 hover:bg-rose-100 text-rose-800',
   slate: 'bg-slate-200 hover:bg-slate-100 text-slate-800',
 };
+type ColorVariant = keyof typeof colorVariants;
 
 
-export default function AsignaturaCard({ item }) {
+type TestCardProps = {
+  item: Tables<'asignatura'>;
+};
+
+
+export default function AsignaturaCard({ item }: TestCardProps) {
   
-  const color: string = item.color;
+  let color: string | null = item.color;
+  if (color === null) {
+    color = 'sky';
+  }
+
   return (
-    <div key={item.id} className={`flex justify-between items-center w-full border p-4 rounded ${colorVariants[color]} transition-all duration-300 ease-in-out`}>
+    <div key={item.id} className={`flex justify-between items-center w-full border p-4 rounded ${colorVariants[color as ColorVariant]} transition-all duration-300 ease-in-out`}>
       <h2 className='font-bold'>{item.name}</h2>
       <div className="my-2 flex gap-2 text-sm">
         <ModalTriggerButton

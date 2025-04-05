@@ -40,13 +40,18 @@ export default function QuizUploadForm() {
   const form = useForm({
     defaultValues: {
       quizName: "",
-      file: null,
+      file: null as File | null,
       numQuestions: 12,
       subjectId: "",
     },
     onSubmit: async ({ value }) => {
       if (!user) {
         console.error("User not authenticated");
+        return;
+      }
+
+      if (!value.file) {
+        console.error("No file provided");
         return;
       }
 
@@ -170,13 +175,7 @@ export default function QuizUploadForm() {
             const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
               if (e.target.files?.[0]) {
                 const file = e.target.files[0];
-                field.handleChange(file);
-                // Auto-populate the quizName field if it's empty.
-                const quizNameField = form.getField("quizName");
-                if (!quizNameField.state.value) {
-                  const rawName = file.name.replace(/\.[^/.]+$/, "");
-                  quizNameField.handleChange(cleanFileName(rawName));
-                }
+                field.handleChange(file as File | null);
               }
             };
 
@@ -297,7 +296,7 @@ export default function QuizUploadForm() {
                     disabled={isLoadingSubjects}
                   >
                     <option value="">Selecciona una asignatura</option>
-                    {subjects.map((subject) => (
+                    {Array.isArray(subjects) && subjects.map((subject) => (
                       <option key={subject.id} value={subject.id}>
                         {subject.name}
                       </option>
@@ -309,7 +308,7 @@ export default function QuizUploadForm() {
                     </div>
                   )}
                 </div>
-                {subjects.length === 0 && !isLoadingSubjects && (
+                {Array.isArray(subjects) && subjects.length === 0 && !isLoadingSubjects && (
                   <p className="text-sm text-gray-500 mt-1">
                     No tienes asignaturas creadas. Crea una primero en la sección de asignaturas.
                   </p>

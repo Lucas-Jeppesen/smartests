@@ -33,7 +33,7 @@ export default function Tests() {
           <Link href="/crear-test" className='bg-gray-50 text-gray-950 px-4 py-2 rounded mb-4 cursor-pointer border-1 border-gray-400'>Crear nuevo</Link>
         </div>
         <div className="flex flex-col gap-4">
-          {data.map(item => (
+          {Array.isArray(data) && data.map(item => (
             <TestCard key={item.id} item={item} />
           ))}
         </div>
