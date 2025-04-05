@@ -7,7 +7,7 @@ import { createClient } from "@/app/utils/supabase/client";
 import { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { QuizWithAsignatura } from "@/app/components/Quiz/types";
 import { useQueryClient } from "@tanstack/react-query";
-
+import { Tables } from "@/database.types";
 
 
 
@@ -39,15 +39,20 @@ export default function QuizPage() {
 
             const { data: asignaturaData } = await supabase
               .from("asignatura")
-              .select("id, name")
+              .select("id, name, color")
               .eq("id", updatedQuiz.asignatura_id)
               .single();
 
-            setQuizData({
-              ...updatedQuiz,
-              asignatura: asignaturaData
-            });
-
+              if (asignaturaData) {
+                setQuizData({
+                  ...updatedQuiz,
+                  asignatura: {
+                    id: asignaturaData.id,
+                    name: asignaturaData.name,
+                    color: asignaturaData.color,
+                  },
+                });
+              }
             queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'quiz'] });
             if (payload.new.status === "complete") {
               setLoading(false);
