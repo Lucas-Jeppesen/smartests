@@ -2,13 +2,6 @@ import Link from "next/link"
 import { PlusCircle} from "lucide-react"
 
 export default function Inicio() {
-  // Placeholder test data
-  const tests = [
-    { id: 1, title: "Test de Matemáticas" },
-    { id: 2, title: "Test de Ciencias" },
-    { id: 3, title: "Test de Historia" },
-    { id: 4, title: "Test de Literatura" },
-  ]
 
   return (
     <div className="container mx-auto px-4 py-8">
