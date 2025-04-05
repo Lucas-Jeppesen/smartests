@@ -10,7 +10,7 @@ export default function DeleteAsigModal() {
 
 
   const createMutation = useMutation({
-    mutationFn: () => borrarAsignatura({ id }),
+    mutationFn: () => borrarAsignatura({ id: id ?? '' }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'asignatura'] });
       closeModal();

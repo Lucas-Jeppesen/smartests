@@ -40,7 +40,7 @@ export default function Asignaturas() {
           </ModalTriggerButton>
         </div>
         <div className="flex flex-col gap-4">
-          {data.map(item => (
+          {Array.isArray(data) && data.map(item => (
             <AsignaturaCard key={item.id} item={item} />
           ))}
         </div>

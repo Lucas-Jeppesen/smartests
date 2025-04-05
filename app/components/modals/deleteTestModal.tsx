@@ -10,7 +10,7 @@ export default function DeleteTestModal() {
 
 
   const createMutation = useMutation({
-    mutationFn: () => borrarTest({ id }),
+    mutationFn: () => borrarTest({ id: id ?? ''  }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'quiz'] });
       closeModal();
