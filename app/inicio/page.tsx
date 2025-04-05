@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { PlusCircle, Edit, Trash2, ExternalLink } from "lucide-react"
+import { PlusCircle} from "lucide-react"
 
 export default function Inicio() {
   // Placeholder test data
