@@ -7,7 +7,6 @@ import { createClient } from "@/app/utils/supabase/client";
 import { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { QuizWithAsignatura } from "@/app/components/Quiz/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { Tables } from "@/database.types";
 
 
 
