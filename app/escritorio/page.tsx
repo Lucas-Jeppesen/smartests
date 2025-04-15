@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { PlusCircle} from "lucide-react"
 
-export default function Inicio() {
+export default function Escritorio() {
 
   return (
     <div className="container mx-auto px-4 py-8">

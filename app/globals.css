@@ -10,11 +10,24 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-author: var(--font-author);
+}
+
+@theme {
+  --color-yellow-1: #FEFCEB;
+  --color-yellow-2: #F6EED5;
+  --color-yellow-3: #F7F1DF;
+  --color-yellow-4: #E9DDB9;
+  --color-green-1: #527E26;
+  --color-green-2: #25350D;
+  --color-green-3: #1D290A; 
+  --color-green-4: #161E0A;
+
+
 }
 
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

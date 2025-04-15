@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
-import cleanFileName from "../utils/cleanFileName";
-import { supabase } from "../lib/supabase";
-import { createClient } from "../utils/supabase/client";
-import { fetchWholeTable } from "../utils/fetches/fetchWholeTable";
+import cleanFileName from "../../utils/cleanFileName";
+import { supabase } from "../../lib/supabase";
+import { createClient } from "../../utils/supabase/client";
+import { fetchWholeTable } from "../../utils/fetches/fetchWholeTable";
 import { useQuery } from "@tanstack/react-query";
 
 

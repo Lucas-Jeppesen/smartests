@@ -11,7 +11,7 @@ export default function LandingPage() {
         </p>
 
         <Link
-          href="/inicio"
+          href="/escritorio"
           className="inline-flex h-12 items-center justify-center rounded-md bg-black px-8 text-base font-medium text-background shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           Empezar

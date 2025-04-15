@@ -1,9 +1,8 @@
 
-import Asignaturas from "../components/Asignaturas/asignaturas";
-import Tests from "../components/tests/tests";
+import Asignaturas from "@/app/components/Asignaturas/asignaturas";
+import Tests from "@/app/components/tests/tests";
 
 export default async function MisTests() {
-
   return(
     <div className="p-12 flex gap-8 bg-gray-100 w-full">
       <div className="w-2/3">
