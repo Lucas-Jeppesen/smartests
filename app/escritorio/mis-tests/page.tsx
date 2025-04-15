@@ -4,14 +4,12 @@ import Link from "next/link";
 
 export default function MisTests() {
   return(
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex flex-col gap-8 w-full">  
       <div className="flex justify-between">
         <h1 className="text-2xl font-semibold text-green-4">Aqui tienes tus Tests: </h1>
-        <Link href="/crear-test" className='bg-gray-50 text-gray-950 px-4 py-2 rounded mb-4 cursor-pointer border-1 border-gray-400'>Crear nuevo</Link>
+        <Link href="/escritorio/crear-test" className='bg-yellow-1 hover:bg-green-1 hover:text-yellow-1 text-green-2 font-medium text-sm px-6 py-1 rounded cursor-pointer border border-green-1 transition-all duration-300 ease-in-out'>Crear nuevo</Link>
       </div>
-      <div className="w-2/3">
         <Tests />
-      </div>
     </div>
   );
 }

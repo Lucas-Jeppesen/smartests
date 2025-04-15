@@ -22,6 +22,7 @@
   --color-green-2: #25350D;
   --color-green-3: #1D290A; 
   --color-green-4: #161E0A;
+  --color-green-gray: #2A2F23;
 
 }
 
@@ -29,4 +30,6 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  font-feature-settings: 'lnum';
+  font-variant-numeric: lining-nums;
 }

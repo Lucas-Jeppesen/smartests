@@ -10,11 +10,14 @@ import DeleteTestModal from '../modals/deleteTestModal';
 
 export default function Tests() {
 
-  const { isError, data, error } = useQuery({
+  const { isPending, isError, data, error } = useQuery({
     queryKey: ['obtener-tabla', 'quiz'],
     queryFn: () => fetchQuizesExtended('quiz'),
   })
 
+  if (isPending) {
+    return <span>Loading...</span>
+  }
 
   if (isError) {
     return <span>Error: {error.message}</span>
@@ -23,18 +26,13 @@ export default function Tests() {
   
   return (
     <ModalProvider>
-      <div className="p-4 w-full">
-        <div className='flex justify-between'>
-          <h1 className="text-2xl font-bold mb-4">Tests</h1>
-        </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           {Array.isArray(data) && data.map(item => (
             <TestCard key={item.id} item={item} />
           ))}
         </div>
         {/* Including all modal components */}
         <DeleteTestModal />
-      </div>
     </ModalProvider>
   );
 }
