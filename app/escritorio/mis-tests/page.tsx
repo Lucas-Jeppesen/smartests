@@ -1,5 +1,4 @@
 
-import Asignaturas from "@/app/components/Asignaturas/asignaturas";
 import Tests from "@/app/components/tests/tests";
 import Link from "next/link";
 
