@@ -3,6 +3,7 @@
 import ModalTriggerButton from '../modals/modalTriggerButton';
 import { QuizWithAsignatura } from '../Quiz/types';
 import { formatDate } from '@/app/utils/general-helpers';
+import Link from 'next/link';
 
 type TestCardProps = {
   item: QuizWithAsignatura;
@@ -55,7 +56,7 @@ export default function TestCard({ item } : TestCardProps) {
         <p className={`text-center border p-2 rounded ${colorVariants[asignatura_color as ColorVariant]}transition-all duration-300 ease-in-out`}>{asignatura_name}</p>
       </div>
       <div className="my-2 flex gap-4">
-      <a href={`/test/${item.id}`} className='bg-black text-white px-4 py-2 rounded cursor-pointer text-sm'>Ir al test</a>
+      <Link href={`/escritorio/test/${item.id}`} className='bg-black text-white px-4 py-2 rounded cursor-pointer text-sm'>Ir al test</Link>
         <ModalTriggerButton
           type="delete-test"
           className='text-red-600 px-4 py-2  rounded cursor-pointer text-sm underline' 
@@ -70,40 +71,3 @@ export default function TestCard({ item } : TestCardProps) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// type TestCardProps = {
-//     name: string;
-//     created_at: string;
-// }
-
-// export default function TestCard({name, created_at} : TestCardProps) {
-
-//     const date: Date = new Date(created_at);
-
-//     const formattedDate: string = new Intl.DateTimeFormat('en-GB', {
-//         day: '2-digit',
-//         month: '2-digit',
-//         year: 'numeric',
-//         timeZone: 'UTC'
-//       }).format(date);
-
-//     return(
-//         <div>
-//             <h3>{name}</h3>
-//             <a>Asignatura...</a>
-//             <p>{formattedDate}</p>
-//             <button>Iniciar</button>
-//             <button>Eliminar</button>
-//         </div>
-//     );
-// }
