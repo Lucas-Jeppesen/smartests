@@ -1,4 +1,3 @@
-// components/quiz/QuizRenderer.tsx
 import { useState } from "react";
 import { Question, SelectedAnswers } from "./types";
 import QuestionCard from "./questionCard";

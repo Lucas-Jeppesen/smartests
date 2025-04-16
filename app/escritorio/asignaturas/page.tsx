@@ -7,7 +7,7 @@ import { createClient } from "@/app/utils/supabase/server";
 
 export default async function misAsignaturas() {
   const clientSupa = await createClient();
-  const { data: { user }, error } = await clientSupa.auth.getUser();
+  const { data: { user } } = await clientSupa.auth.getUser();
   return(
     <ModalProvider>
         <div className="flex flex-col gap-8 w-full">  
@@ -20,9 +20,15 @@ export default async function misAsignaturas() {
                             Crear nueva
                     </ModalTriggerButton>
             </div>
-            <Asignaturas userId={user.id} />
+            {user ? (
+                <>
+                    <Asignaturas userId={user.id} />
+                    <CreateAsigModal userId={user.id} />
+                </>
+            ) : (
+                <p className="text-red-500">Error: User not found.</p>
+            )}
         </div>
-        <CreateAsigModal userId={user.id} />
     </ModalProvider>
   );
 }
