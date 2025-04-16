@@ -22,7 +22,7 @@ const links = [
 export default function SideNav() {
   const pathname = usePathname();
   return (
-    <div className="w-full h-[calc(100vh-74px)] bg-green-4 text-yellow-2 px-2 py-6">
+    <div className="w-full h-[calc(100vh-56px)] bg-green-4 text-yellow-2 px-2 py-6">
       <div className="flex flex-col">
         {links.map((link) => {
           const Icon = link.icon;

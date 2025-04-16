@@ -6,11 +6,15 @@ import { fetchWholeTable } from '@/app/utils/fetches/fetchWholeTable';
 import { useQuery } from '@tanstack/react-query';
 import AsignaturaCard from './asignaturaCard';
 
+interface asignaturasProps {
+  userId: string; 
+}
 
-export default function Asignaturas() {
+
+export default function Asignaturas( { userId } : asignaturasProps ) {
 
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ['obtener-tabla', 'asignatura'],
+    queryKey: ['asignaturas', userId],
     queryFn: () => fetchWholeTable('asignatura'),
   })
 
@@ -24,15 +28,15 @@ export default function Asignaturas() {
 
   
   return (
-      <div className="p-4 w-full">
-        <div className="flex flex-col gap-4">
+      <div className="w-full">
+        <div className="flex flex-col gap-2">
           {Array.isArray(data) && data.map(item => (
             <AsignaturaCard key={item.id} item={item} />
           ))}
         </div>
         {/* Including all modal components */}
-        <EditAsigModal />
-        <DeleteAsigModal />
+        <EditAsigModal userId={userId} />
+        <DeleteAsigModal userId={userId} />
       </div>
   );
 }

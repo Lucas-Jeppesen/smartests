@@ -5,9 +5,11 @@ import { editAsignatura } from "@/app/utils/asignaturas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ColorPicker from "./colorPicker";
 
+interface userIdProp {
+  userId: string;
+}
 
-
-export default function EditAsigModal() {
+export default function EditAsigModal( { userId } : userIdProp ) {
   const queryClient = useQueryClient()
   const { modalState, closeModal } = useModal();
   const [name, setName] = useState(modalState.data?.name || '');
@@ -28,7 +30,7 @@ export default function EditAsigModal() {
   const createMutation = useMutation({
     mutationFn: () => editAsignatura({ id, name, color }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'asignatura'] });
+      queryClient.invalidateQueries({ queryKey: ['asignaturas', userId] });
       closeModal();
     },
     onError: (error) => {

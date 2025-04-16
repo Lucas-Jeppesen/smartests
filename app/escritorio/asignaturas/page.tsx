@@ -3,8 +3,11 @@ import Asignaturas from "@/app/components/Asignaturas/asignaturas";
 import ModalTriggerButton from "@/app/components/modals/modalTriggerButton";
 import { ModalProvider } from "@/app/components/modals/modalContext";
 import CreateAsigModal from "@/app/components/modals/createAsigModal";
+import { createClient } from "@/app/utils/supabase/server";
 
-export default function misAsignaturas() {
+export default async function misAsignaturas() {
+  const clientSupa = await createClient();
+  const { data: { user }, error } = await clientSupa.auth.getUser();
   return(
     <ModalProvider>
         <div className="flex flex-col gap-8 w-full">  
@@ -17,9 +20,9 @@ export default function misAsignaturas() {
                             Crear nueva
                     </ModalTriggerButton>
             </div>
-            <Asignaturas />
+            <Asignaturas userId={user.id} />
         </div>
-        <CreateAsigModal />
+        <CreateAsigModal userId={user.id} />
     </ModalProvider>
   );
 }

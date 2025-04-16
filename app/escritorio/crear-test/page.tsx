@@ -8,6 +8,7 @@ import { supabase } from "../../lib/supabase";
 import { createClient } from "../../utils/supabase/client";
 import { fetchWholeTable } from "../../utils/fetches/fetchWholeTable";
 import { useQuery } from "@tanstack/react-query";
+import { Upload } from "lucide-react";
 
 
 export default function QuizUploadForm() {
@@ -129,13 +130,15 @@ export default function QuizUploadForm() {
   });
 
   return (
-    <form
+    <div className="flex flex-col gap-4 w-full items-center">  
+      <h1 className="text-2xl text-center font-semibold text-green-4">Crea un test nuevo</h1>
+      <form
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
         form.handleSubmit();
       }}
-      className="flex flex-col items-center space-y-4 px-12 pt-12"
+      className="flex flex-col items-center gap-4 w-full max-w-4xl px-8 pb-8"
     >
 
       {/* Quiz Name Field */}
@@ -144,7 +147,7 @@ export default function QuizUploadForm() {
           {(field) => (
             <>
               <label htmlFor={field.name} className="block text-sm font-medium">
-                Nombre del Test
+                Nombre
               </label>
               <input
                 id={field.name}
@@ -152,8 +155,8 @@ export default function QuizUploadForm() {
                 value={field.state.value || ""}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="border px-4 py-2 rounded w-full"
-                placeholder="Dejar vacío para coger nombre del pdf"
+                className="border px-4 py-2 rounded-md w-full bg-yellow-1 border-yellow-4"
+                placeholder="Nombre del test"
               />
               {
                 field.state.meta.errors.map((error, i) => (
@@ -183,29 +186,15 @@ export default function QuizUploadForm() {
               <>
                 <label
                   htmlFor={field.name}
-                  className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                  className="flex flex-col items-center justify-center w-full h-64 border-2 border-yellow-4 border-dashed rounded-lg cursor-pointer bg-yellow-1  transition-all duration-200"
                 >
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg
-                      className="w-8 h-8 mb-4 text-gray-500"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 20 16"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                      />
-                    </svg>
-                    <p className="mb-2 text-sm text-gray-500">
-                      <span className="font-semibold">Click to upload</span> or drag and drop
+                  <div className="flex flex-col gap-2 items-center justify-center pt-5 pb-6 ">
+                    <Upload className="w-6 h-6 text-green-1"/>
+                    <p className="text-md font-semibold text-green-2"> 
+                      Haz click o suelta tu <span className="text-green-1">pdf</span> aquí
                     </p>
-                    <p className="text-xs text-gray-500">PDF only</p>
                     {field.state.value && (
-                      <p className="mt-2 text-sm font-semibold text-green-600">
+                      <p className="text-sm font-medium text-green-1">
                         {(field.state.value as File).name}
                       </p>
                     )}
@@ -240,10 +229,10 @@ export default function QuizUploadForm() {
               return (
                 <>
                   <div className="flex justify-between items-center">
-                    <label htmlFor={field.name} className="block text-sm font-medium">
+                    <label htmlFor={field.name} className="block text-sm font-medium text-green-4">
                       Número de Preguntas
                     </label>
-                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                    <span className="bg-yellow-1 border border-yellow-4 text-green-1 text-xs font-medium px-2 py-0.5 rounded">
                       {field.state.value}
                     </span>
                   </div>
@@ -292,7 +281,7 @@ export default function QuizUploadForm() {
                     value={field.state.value || ""}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
-                    className="border px-4 py-2 rounded w-full bg-white"
+                    className="appearance-none border px-4 py-2 text-sm font-medium text-green-4 rounded-md border-yellow-4 w-full bg-yellow-1"
                     disabled={isLoadingSubjects}
                   >
                     <option value="">Selecciona una asignatura</option>
@@ -302,6 +291,21 @@ export default function QuizUploadForm() {
                       </option>
                     ))}
                   </select>
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                    <svg
+                      className="h-4 w-4 text-green-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </span>
                   {isLoadingSubjects && (
                     <div className="absolute right-2 top-2">
                       <div className="animate-spin h-5 w-5 border-2 border-blue-500 rounded-full border-t-transparent"></div>
@@ -339,6 +343,8 @@ export default function QuizUploadForm() {
         )}
       </form.Subscribe>
     </form>
+    </div>
+    
   );
 }
 

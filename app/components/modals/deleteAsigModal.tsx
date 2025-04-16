@@ -3,7 +3,12 @@ import BaseModal from "./baseModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { borrarAsignatura } from "@/app/utils/asignaturas";
 
-export default function DeleteAsigModal() {
+
+interface userIdProp {
+  userId: string;
+}
+
+export default function DeleteAsigModal({ userId } : userIdProp) {
   const queryClient = useQueryClient()
   const { modalState, closeModal } = useModal();
   const id = modalState.data?.id;
@@ -12,7 +17,7 @@ export default function DeleteAsigModal() {
   const createMutation = useMutation({
     mutationFn: () => borrarAsignatura({ id: id ?? '' }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'asignatura'] });
+      queryClient.invalidateQueries({ queryKey: ['asignaturas', userId] });
       closeModal();
     },
     onError: (error) => {

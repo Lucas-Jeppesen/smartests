@@ -7,9 +7,11 @@ import ColorPicker from "./colorPicker";
 import { crearAsignatura } from "@/app/utils/asignaturas";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+interface createAsignProps {
+  userId: string;
+}
 
-
-export default function CreateAsigModal() {
+export default function CreateAsigModal( {userId}: createAsignProps ) {
   const queryClient = useQueryClient()
   const { modalState, closeModal } = useModal();
   const [name, setName] = useState('');
@@ -18,7 +20,8 @@ export default function CreateAsigModal() {
   const createMutation = useMutation({
     mutationFn: () => crearAsignatura({ name, color }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['obtener-tabla', 'asignatura'] });
+      queryClient.invalidateQueries({ queryKey: ['asignaturas', userId]});
+
       closeModal();
     },
     onError: (error) => {

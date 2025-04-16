@@ -23,6 +23,7 @@
   --color-green-3: #1D290A; 
   --color-green-4: #161E0A;
   --color-green-gray: #2A2F23;
+  --color-yellow-extra: #F6EED5;
 
 }
 
@@ -32,4 +33,29 @@ body {
   color: var(--foreground);
   font-feature-settings: 'lnum';
   font-variant-numeric: lining-nums;
+}
+
+
+
+
+input[type='range'] {
+  @apply appearance-none w-full h-2 rounded-lg cursor-pointer;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  @apply bg-green-1 rounded-full w-4 h-4;
+  -webkit-appearance: none;
+  margin-top: -4px;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  @apply bg-yellow-4 h-2 rounded-lg;
+}
+
+input[type='range']::-moz-range-thumb {
+  @apply bg-green-1 rounded-full w-4 h-4;
+}
+
+input[type='range']::-moz-range-track {
+  @apply bg-yellow-4 h-2 rounded-lg;
 }

@@ -24,14 +24,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <Providers>
           <body className={`${author.variable} font-author antialiased`} >
-            <Header />
-            <main className="mt-[74px] bg">
-            {children}
-            </main>
+            <Providers>
+              <Header />
+              <main className="mt-14">
+              {children}
+              </main>
+            </Providers>
           </body>
-        </Providers>
     </html>
   );
 }
