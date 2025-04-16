@@ -108,7 +108,7 @@ export default function UploadPdf() {
     const quizData = await response.json();
     console.log(quizData);
 
-    router.push(`/test/${quizData.quizId}`);
+    router.push(`/escritorio/test/${quizData.quizId}`);
 
     if (!response.ok) {
       throw new Error(quizData.error || "Failed to generate quiz");
