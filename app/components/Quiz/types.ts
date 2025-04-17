@@ -13,7 +13,7 @@ export interface QuizData {
 }
 
 export interface SelectedAnswers {
-  [key: number]: string;
+  [key: string]: string;
 }
 
 
@@ -24,4 +24,30 @@ export type QuizWithAsignatura = Tables<'quiz'> & {
     color: string;
   }
 }
-  
+
+
+
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  answer: string;
+}
+
+export interface UserAnswers {
+  [questionIndex: string]: string;
+}
+
+export interface QuizResult {
+  totalQuestions: number;
+  correctAnswers: number;
+  incorrectAnswers: Array<{
+    question: string;
+    userAnswer: string;
+    correctAnswer: string;
+  }>;
+  correctlyAnswered: Array<{
+    question: string;
+    answer: string;
+  }>;
+  score: number;
+}

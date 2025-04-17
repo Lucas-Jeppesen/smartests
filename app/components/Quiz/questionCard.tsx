@@ -5,7 +5,7 @@ interface QuestionCardProps {
   questionIndex: number;
   selectedAnswers: SelectedAnswers;
   onAnswerSelect: (questionIndex: number, answer: string) => void;
-  showResults?: boolean; // Added to handle showing correct/incorrect answers
+  showResults?: boolean;
 }
 
 export default function QuestionCard({

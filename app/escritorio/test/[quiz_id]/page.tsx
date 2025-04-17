@@ -22,7 +22,6 @@ export default function QuizPage() {
   useEffect(() => {
     let subscription: RealtimeChannel | null = null;
     const setupRealtimeSubscription = async (supabase: SupabaseClient ) => {
-      // Create new subscription, no need to check for "channel" state here
       const newChannel = supabase
         .channel(`quiz_status_${quizId}`)
         .on(
@@ -73,7 +72,8 @@ export default function QuizPage() {
           *,
           asignatura:asignatura_id (
             id,
-            name
+            name,
+            color
           )
         `)
         .eq("id", quizId)
@@ -105,13 +105,13 @@ export default function QuizPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center w-5">
+        <div className="flex flex-col items-center w-48">
           <DotLottieReact
             src="/animations/generating-quiz-animation.lottie"
             loop
             autoplay
           />
-          <p className="mt-4 text-center text-lg">Cargando preguntas</p>
+          <p className="mt-4 text-center text-lg">Generando preguntas</p>
         </div>
       </div>
     );

@@ -15,7 +15,7 @@ const colorVariants = {
   red: 'text-red-700',
   orange: 'text-orange-700',
   amber: 'text-amber-700',
-  yellow: 'text-yello-700',
+  yellow: 'text-yellow-700',
   lime: 'text-lime-700',
   green: 'text-green-700',
   emerald: 'text-emerald-700',
@@ -31,16 +31,12 @@ const colorVariants = {
   rose: 'text-rose-700',
   slate: 'text-slate-700',
 };
-
-
-
 type ColorVariant = keyof typeof colorVariants;
 
 
 export default function TestCard({ item } : TestCardProps) {
   
   const formatedDate = formatDate(item.created_at);
-  console.log(item);
 
   let asignatura_name = "";
   let asignatura_color = "";
