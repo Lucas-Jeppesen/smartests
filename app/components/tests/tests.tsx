@@ -6,6 +6,7 @@ import { fetchQuizesExtended } from '@/app/utils/fetches/fetchQuizesExtended';
 import { useQuery } from '@tanstack/react-query';
 import TestCard from './testCard';
 import DeleteTestModal from '../modals/deleteTestModal';
+import ModalDisplayStats from '../modals/displayStatsModal';
 
 
 export default function Tests() {
@@ -33,6 +34,7 @@ export default function Tests() {
         </div>
         {/* Including all modal components */}
         <DeleteTestModal />
+        <ModalDisplayStats />
     </ModalProvider>
   );
 }

@@ -1,1 +1,1 @@
-export type ModalType = 'create-asig' | 'edit-asig' | 'delete-asig' | 'delete-test' | null;
+export type ModalType = 'create-asig' | 'edit-asig' | 'delete-asig' | 'delete-test' | 'stats-test' | null;

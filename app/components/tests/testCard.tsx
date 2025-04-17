@@ -5,6 +5,7 @@ import { QuizWithAsignatura } from '../Quiz/types';
 import { formatDate } from '@/app/utils/general-helpers';
 import Link from 'next/link';
 import { Calendar, CircleHelp, LibraryBig } from 'lucide-react';
+import { BarChart2 } from 'lucide-react';
 
 
 type TestCardProps = {
@@ -74,7 +75,22 @@ export default function TestCard({ item } : TestCardProps) {
         >
           Borrar
         </ModalTriggerButton>
-        <Link href={`/escritorio/test/${item.id}`} className='bg-green-4 hover:bg-green-2 text-white px-12 py-1 rounded cursor-pointer text-sm transition-all duration-300 ease-in-out'>Iniciar</Link>
+        <div className='flex gap-2'>
+          <ModalTriggerButton
+            type="stats-test"
+            data={{
+              id: item.id,
+              name: item.name,
+              formated_date: formatedDate,
+              num_questions: item.num_questions,
+              asignatura: item.asignatura,
+            }}
+            className="flex items-center cursor-pointer gap-2 text-green-gray hover:text-green-4 transition-colors"
+          >
+            <BarChart2 className="w-5 h-5" />
+          </ModalTriggerButton>
+          <Link href={`/escritorio/test/${item.id}`} className='bg-green-4 hover:bg-green-2 text-white px-12 py-1 rounded cursor-pointer text-sm transition-all duration-300 ease-in-out'>Iniciar</Link>
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,8 @@ import { QuizWithAsignatura } from "./types";
 import { evaluateQuiz } from "@/app/utils/general-helpers";
 import { Calendar, CircleHelp, LibraryBig } from "lucide-react";
 import { formatDate } from "@/app/utils/general-helpers";
+import { useParams } from "next/navigation";
+import { crearAttemp } from "@/app/utils/attemps";
 
 
 interface QuizRendererProps {
@@ -40,6 +42,9 @@ type ColorVariant = keyof typeof colorVariants;
 
 export default function QuizRenderer({ quizData }: QuizRendererProps) {
 
+  const params = useParams();
+  const quidId = params.quiz_id;
+
   const defaultValues = {
     answers: {} as SelectedAnswers
   };
@@ -49,6 +54,8 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
     onSubmit: async ({ value }) => {
       const attempData = evaluateQuiz(questions, value.answers);
       console.log(attempData);
+      crearAttemp(attempData, quidId)
+      console.log("Wrote to the db")
 
     },
   });
@@ -90,7 +97,6 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
           onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            form.handleSubmit();
           }}
         >
           <div className="space-y-8">
