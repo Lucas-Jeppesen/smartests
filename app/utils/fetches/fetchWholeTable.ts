@@ -10,7 +10,7 @@ export async function fetchWholeTable(table: string) {
 
   if (user) {
     const userId = user.id;
-    const { data,  error } = await supabase
+    const { data, error } = await supabase
     .from(table)
     .select("*")
     .eq("user_id", userId)

@@ -1,4 +1,4 @@
-import { Tables } from "@/database.types";
+import { Json, Tables } from "@/database.types";
 
 export interface Question {
     question: string;
@@ -51,3 +51,28 @@ export interface QuizResult {
   }>;
   score: number;
 }
+
+
+export type TestData = {
+  id: string;
+  name: string;
+  formated_date: string;
+  num_questions: number;
+  asignatura: {
+    id: string;
+    name: string;
+    color: string;
+  }
+};
+
+
+export type Attempt = {
+  id: number;
+  created_at: string;
+  user_id: string;
+  quiz_id: string;
+  score: number;
+  attemp_raw_data: Json;
+};
+
+

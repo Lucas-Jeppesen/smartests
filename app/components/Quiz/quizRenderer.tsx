@@ -10,6 +10,9 @@ import { Calendar, CircleHelp, LibraryBig } from "lucide-react";
 import { formatDate } from "@/app/utils/general-helpers";
 import { useParams } from "next/navigation";
 import { crearAttemp } from "@/app/utils/attemps";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QuizResult } from "./types";
+
 
 
 interface QuizRendererProps {
@@ -41,22 +44,32 @@ type ColorVariant = keyof typeof colorVariants;
 
 
 export default function QuizRenderer({ quizData }: QuizRendererProps) {
-
+  const queryClient = useQueryClient();
   const params = useParams();
-  const quidId = params.quiz_id;
+  const quidId = typeof params.quiz_id === 'string'
+  ? params.quiz_id
+  : '';
 
   const defaultValues = {
     answers: {} as SelectedAnswers
   };
 
+  const createMutation = useMutation({
+    mutationFn: ({ attempData, quidId }: { attempData: QuizResult; quidId: string }) =>
+      crearAttemp(attempData, quidId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["quiz-attemps", quidId] });
+    },
+    onError: (error) => {
+      console.error("Failed to register attemp", error);
+    },
+  });
+
   const form = useForm({
     defaultValues,
     onSubmit: async ({ value }) => {
       const attempData = evaluateQuiz(questions, value.answers);
-      console.log(attempData);
-      crearAttemp(attempData, quidId)
-      console.log("Wrote to the db")
-
+      createMutation.mutate({ attempData, quidId });
     },
   });
 

@@ -1,21 +1,18 @@
 "use server";
 
+import { QuizResult } from "../components/Quiz/types";
 import { createClient } from "./supabase/server";
 
-export async function crearAttemp(attempData, quizId) {
+export async function crearAttemp(attempData: QuizResult , quizId : string) {
 
-    console.log("Server action started with quiz ID:", quizId);
-    
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      console.log("No user found");
       return { error: "No user found" };
     }
 
-    const scoreNum = parseFloat(attempData.score);
-    const roundedScore = Math.round(scoreNum * 10) / 100;
+    const roundedScore = Math.round(attempData.score * 10) / 100;
 
     const { data, error } = await supabase
       .from("quiz_attemp")
@@ -31,6 +28,32 @@ export async function crearAttemp(attempData, quizId) {
       return { error };
     }
     
-    console.log("Database insert successful:", data);
     return { data };
+}
+
+
+
+export async function fetchAttemps(quizId : string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { error: "No user found" };
+    }
+
+    if (user) {
+        const { data, error } = await supabase
+        .from("quiz_attemp")
+        .select("*")
+        .eq("quiz_id", quizId)
+        .order('created_at', { ascending: false })
+    
+        if (data) {
+        return data;
+        }
+    
+        if (error) {
+        return error;
+        }
+      }
 }
