@@ -12,6 +12,8 @@ import { useParams } from "next/navigation";
 import { crearAttemp } from "@/app/utils/attemps";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { QuizResult } from "./types";
+import { useState } from "react";
+import { useRef } from "react";
 
 
 
@@ -46,9 +48,10 @@ type ColorVariant = keyof typeof colorVariants;
 export default function QuizRenderer({ quizData }: QuizRendererProps) {
   const queryClient = useQueryClient();
   const params = useParams();
-  const quidId = typeof params.quiz_id === 'string'
-  ? params.quiz_id
-  : '';
+  const quidId = typeof params.quiz_id === 'string' ? params.quiz_id : '';
+
+  const [result, setResult] = useState<QuizResult | null>(null);
+  const topRef = useRef<HTMLDivElement>(null);
 
   const defaultValues = {
     answers: {} as SelectedAnswers
@@ -70,6 +73,13 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
     onSubmit: async ({ value }) => {
       const attempData = evaluateQuiz(questions, value.answers);
       createMutation.mutate({ attempData, quidId });
+      // Scroll to top with offset (e.g., 64px)
+      const offset = 120;
+      if (topRef.current) {
+        const elementPosition = topRef.current.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - offset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      }
     },
   });
 
@@ -89,7 +99,7 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
   const formatedDate = formatDate(quizData.created_at);
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
+    <div ref={topRef} className="container mx-auto px-4 py-8 max-w-3xl">
       <h1 className="text-3xl font-semibold mb-4 text-center text-green-4">{quizData.name}</h1>
       <div className='flex items-center gap-8 justify-center mb-8'>
           <div className='flex items-center gap-1'>
