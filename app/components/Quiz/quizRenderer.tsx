@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { QuizResult } from "./types";
 import { useState } from "react";
 import { useRef } from "react";
+import SubmitResetButton from "./submitButton";
 
 
 
@@ -49,51 +50,52 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
   const queryClient = useQueryClient();
   const params = useParams();
   const quidId = typeof params.quiz_id === 'string' ? params.quiz_id : '';
-
-  const [result, setResult] = useState<QuizResult | null>(null);
   const topRef = useRef<HTMLDivElement>(null);
+  const [result, setResult] = useState<QuizResult | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [showResults, setShowResults] = useState<boolean>(false);
 
-  const defaultValues = {
-    answers: {} as SelectedAnswers
-  };
-
-  const createMutation = useMutation({
-    mutationFn: ({ attempData, quidId }: { attempData: QuizResult; quidId: string }) =>
-      crearAttemp(attempData, quidId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["quiz-attemps", quidId] });
-    },
-    onError: (error) => {
-      console.error("Failed to register attemp", error);
-    },
-  });
-
-  const form = useForm({
-    defaultValues,
-    onSubmit: async ({ value }) => {
-      const attempData = evaluateQuiz(questions, value.answers);
-      createMutation.mutate({ attempData, quidId });
-      // Scroll to top with offset (e.g., 64px)
-      const offset = 120;
-      if (topRef.current) {
-        const elementPosition = topRef.current.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = elementPosition - offset;
-        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-      }
-    },
-  });
-
-  if (!quizData) {
-    return <div>No quiz data available</div>;
-  }
-
-  
   let questions: Question[] = [];
   try {
     questions = JSON.parse(quizData.raw_quiz_text);
   } catch (e) {
     console.error("Error parsing questions:", e);
     return <div>Error parsing quiz questions</div>;
+  }
+
+  const defaultValues = {
+    answers: questions.reduce((acc, _, idx) => {
+      acc[idx] = undefined; // or null, or '' as your default
+      return acc;
+    }, {} as SelectedAnswers),
+  };
+
+  const mutation = useMutation({
+    mutationFn: ({ attempData, quidId }: { attempData: QuizResult; quidId: string }) =>
+      crearAttemp(attempData, quidId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["quiz-attemps", quidId] });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setShowResults(true);
+      setIsSubmitted(true)
+    },
+    onError: (error) => {
+      console.error("Failed to register attemp", error);
+    },
+  });
+
+  console.log(defaultValues)
+  const form = useForm({
+    defaultValues,
+    onSubmit: async ({ value }) => {
+      const attempData = evaluateQuiz(questions, value.answers);
+      mutation.mutate({ attempData, quidId });
+      console.log(attempData)
+    },
+  });
+
+  if (!quizData) {
+    return <div>No quiz data available</div>;
   }
 
   const formatedDate = formatDate(quizData.created_at);
@@ -115,6 +117,9 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
             <p className='font-medium text-sm'>{quizData.asignatura.name}</p>
           </div>
         </div>
+        {showResults && (
+          <div>Score: 2.3</div>
+        )}
 
         <form
           onSubmit={(e) => {
@@ -125,7 +130,7 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
           <div className="space-y-8">
             {questions.map((question, index) => (
               <form.Field
-                key={index}
+                key={question.question}
                 name={`answers.${index}`}
               >
                 {(field) => (
@@ -142,8 +147,15 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
             ))}
           </div>
 
-          <div className="mt-6">
-            <SubmitButton onSubmit={form.handleSubmit} />
+          <div className="mt-6 text-center">
+            <SubmitResetButton
+              isPending={mutation.isPending}
+              isSubmitted={isSubmitted}
+              onReset={form.reset}
+              onSubmit={form.handleSubmit}
+              className={"bg-green-4 text-yellow-1 py-2 px-8 rounded-xl cursor-pointer"}
+            />
+            <button></button>
           </div>
         </form>
     </div>

@@ -27,6 +27,7 @@ export async function crearAttemp(attempData: QuizResult , quizId : string) {
       console.error("Database error:", error);
       return { error };
     }
+    console.log(data);
     
     return { data };
 }

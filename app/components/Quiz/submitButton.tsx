@@ -1,23 +1,30 @@
-// components/quiz/SubmitButton.tsx
-interface SubmitButtonProps {
-    onSubmit: () => void;
-    disabled?: boolean;
-  }
-  
-  export default function SubmitButton({
-    onSubmit,
-    disabled = false,
-  }: SubmitButtonProps) {
+import React from 'react';
+
+interface SubmitResetButtonProps {
+  isPending: boolean;
+  isSubmitted: boolean;
+  onReset: () => void;
+  onSubmit: () => void;
+  className: string;
+}
+
+export default function SubmitResetButton({
+  isPending,
+  isSubmitted,
+  onReset,
+  onSubmit,
+  className,
+}: SubmitResetButtonProps) {
+  if (isSubmitted) {
     return (
-      <div className="mt-8 flex flex-col items-center gap-2">
-        <button
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-          onClick={onSubmit}
-          disabled={disabled}
-        >
-          Submit Quiz
-        </button>
-      </div>
+      <button type="button" onClick={onReset} className={className}>
+        Reset
+      </button>
     );
   }
-  
+  return (
+    <button type="submit" onClick={onSubmit} disabled={isPending} className={className}>
+      {isPending ? 'Submitting...' : 'Submit'}
+    </button>
+  );
+}

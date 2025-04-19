@@ -23,6 +23,7 @@ export default function QuestionCard({
 
       <div className="space-y-2">
         {question.options.map((option, optionIndex) => {
+          
           const isSelected = selectedAnswers[questionIndex] === option;
           const isCorrect = option === question.answer;
           
