@@ -49,7 +49,7 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
   const params = useParams();
   const quidId = typeof params.quiz_id === 'string' ? params.quiz_id : '';
   const topRef = useRef<HTMLDivElement>(null);
-  const [result, setResult] = useState<QuizResult | null>(null);
+  // const [result, setResult] = useState<QuizResult | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   let questions: Question[] = [];
@@ -57,7 +57,6 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
     questions = JSON.parse(quizData.raw_quiz_text);
   } catch (e) {
     console.error("Error parsing questions:", e);
-    return <div>Error parsing quiz questions</div>;
   }
 
   const defaultValues = {

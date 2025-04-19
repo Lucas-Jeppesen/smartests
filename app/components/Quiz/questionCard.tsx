@@ -25,11 +25,11 @@ export default function QuestionCard({
         {question.options.map((option, optionIndex) => {
 
           const isSelected = selectedAnswers[questionIndex] === option;
-          const isCorrect = option === question.answer;
+          // const isCorrect = option === question.answer;
 
           console.log(isSelected);
           
-          let optionClassName = "flex items-center space-x-3 p-3 rounded-lg cursor-pointer ";
+          const optionClassName = "flex items-center space-x-3 p-3 rounded-lg cursor-pointer ";
           
           // if (showResults) {
           //   if (isCorrect) {
