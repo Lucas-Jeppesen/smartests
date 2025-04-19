@@ -3,7 +3,6 @@
 import { useForm } from "@tanstack/react-form";
 import { Question, SelectedAnswers } from "./types";
 import QuestionCard from "./questionCard";
-import SubmitButton from "./submitButton";
 import { QuizWithAsignatura } from "./types";
 import { evaluateQuiz } from "@/app/utils/general-helpers";
 import { Calendar, CircleHelp, LibraryBig } from "lucide-react";
@@ -14,7 +13,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { QuizResult } from "./types";
 import { useState } from "react";
 import { useRef } from "react";
-import SubmitResetButton from "./submitButton";
 
 
 
@@ -53,7 +51,6 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
   const topRef = useRef<HTMLDivElement>(null);
   const [result, setResult] = useState<QuizResult | null>(null);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [showResults, setShowResults] = useState<boolean>(false);
 
   let questions: Question[] = [];
   try {
@@ -65,7 +62,7 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
 
   const defaultValues = {
     answers: questions.reduce((acc, _, idx) => {
-      acc[idx] = undefined; // or null, or '' as your default
+      acc[idx] = "";
       return acc;
     }, {} as SelectedAnswers),
   };
@@ -76,7 +73,6 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["quiz-attemps", quidId] });
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      setShowResults(true);
       setIsSubmitted(true)
     },
     onError: (error) => {
@@ -84,7 +80,6 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
     },
   });
 
-  console.log(defaultValues)
   const form = useForm({
     defaultValues,
     onSubmit: async ({ value }) => {
@@ -117,8 +112,12 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
             <p className='font-medium text-sm'>{quizData.asignatura.name}</p>
           </div>
         </div>
-        {showResults && (
-          <div>Score: 2.3</div>
+        {isSubmitted && (
+          <div>
+            <p>Nota: </p>
+            <p>Fallaste: </p>
+            <p>Acertaste</p>
+          </div>
         )}
 
         <form
@@ -148,15 +147,35 @@ export default function QuizRenderer({ quizData }: QuizRendererProps) {
           </div>
 
           <div className="mt-6 text-center">
-            <SubmitResetButton
-              isPending={mutation.isPending}
-              isSubmitted={isSubmitted}
-              onReset={form.reset}
-              onSubmit={form.handleSubmit}
-              className={"bg-green-4 text-yellow-1 py-2 px-8 rounded-xl cursor-pointer"}
-            />
-            <button></button>
+            {isSubmitted ? (
+              <button
+                className="bg-green-4 text-yellow-1 py-2 px-10 text-medium hover:bg-green-1 duration-200 rounded-xl"
+                type="reset"
+                onClick={(event) => {
+                  event.preventDefault()
+                  form.reset()
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  setIsSubmitted(false)
+                }}
+              >
+                Reiniciar test
+              </button>
+            ) : (
+              <button type="submit" onClick={form.handleSubmit} disabled={mutation.isPending}
+                className="bg-green-4 text-yellow-1 py-2 px-10 text-medium hover:bg-green-1 duration-200 rounded-xl">
+                {mutation.isPending ? 'Corrigiendo...' : 'Corregir'}
+              </button>
+            )}
+
           </div>
+          <form.Subscribe
+            selector={state => state.values}
+          >
+            {values => {
+              console.log('new form state:', values)
+              return null
+            }}
+          </form.Subscribe>
         </form>
     </div>
   );

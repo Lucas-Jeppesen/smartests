@@ -23,21 +23,23 @@ export default function QuestionCard({
 
       <div className="space-y-2">
         {question.options.map((option, optionIndex) => {
-          
+
           const isSelected = selectedAnswers[questionIndex] === option;
           const isCorrect = option === question.answer;
+
+          console.log(isSelected);
           
           let optionClassName = "flex items-center space-x-3 p-3 rounded-lg cursor-pointer ";
           
-          if (showResults) {
-            if (isCorrect) {
-              optionClassName += "bg-green-100";
-            } else if (isSelected && !isCorrect) {
-              optionClassName += "bg-red-100";
-            }
-          } else {
-            optionClassName += "hover:bg-gray-50";
-          }
+          // if (showResults) {
+          //   if (isCorrect) {
+          //     optionClassName += "bg-green-100";
+          //   } else if (isSelected && !isCorrect) {
+          //     optionClassName += "bg-red-100";
+          //   }
+          // } else {
+          //   optionClassName += "hover:bg-gray-50";
+          // }
 
           return (
             <label key={optionIndex} className={optionClassName}>
@@ -51,12 +53,12 @@ export default function QuestionCard({
                 className="form-radio h-5 w-5 text-blue-600"
               />
               <span className="text-gray-700">{option}</span>
-              {showResults && isCorrect && (
+              {/* {showResults && isCorrect && (
                 <span className="ml-2 text-green-600">✓</span>
               )}
               {showResults && isSelected && !isCorrect && (
                 <span className="ml-2 text-red-600">✗</span>
-              )}
+              )} */}
             </label>
           );
         })}
